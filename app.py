@@ -12,6 +12,7 @@ Aplikasi ini terdiri dari dua bagian:
                                                 yang mengonsumsi API di atas)
 """
 
+from urllib.parse import unquote
 from flask import Flask, jsonify, render_template
 from actors_data import DATA_AKTOR
 
@@ -38,13 +39,17 @@ def get_info_aktor(nama):
     - 200 + status "berhasil" jika data ditemukan
     - 404 + status "gagal"    jika data tidak ditemukan
     """
-    kunci = nama.strip().lower()
+    # Decode manual: di Vercel, path segment kadang belum ter-decode
+    # (mis. "Ana%20de%20Armas") saat sampai ke Flask, berbeda dengan
+    # server dev lokal yang otomatis men-decode-nya.
+    nama_decoded = unquote(nama)
+    kunci = nama_decoded.strip().lower()
     aktor = DATA_AKTOR.get(kunci)
 
     if aktor is None:
         return jsonify({
             "status": "gagal",
-            "pesan": f"Aktor dengan nama '{nama}' tidak ditemukan."
+            "pesan": f"Aktor dengan nama '{nama_decoded}' tidak ditemukan."
         }), 404
 
     return jsonify({"status": "berhasil", "data": aktor}), 200
