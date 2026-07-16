@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Informasi Aktor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🎬</span>
+      <span>API Informasi Aktor</span>
+    </div>
+    <span class="badge">Flask REST API</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">Studi Kasus 5 &middot; Layanan Katalog Film</p>
+      <h1>Cari Informasi Aktor <span class="accent">Secara Instan</span></h1>
+      <p class="hero-sub">
+        Masukkan nama aktor untuk mengambil data lengkap melalui endpoint
+        <code>/api/aktor/&lt;nama&gt;</code> — nama, tanggal lahir, jenis kelamin,
+        negara asal, dan URL profil.
+      </p>
+
+      <form id="form-cari" class="search-box" autocomplete="off">
+        <input
+          id="input-nama"
+          type="text"
+          placeholder="Contoh: Leonardo DiCaprio, Zendaya, Michelle Yeoh…"
+          list="saran-aktor"
+        />
+        <datalist id="saran-aktor">
+          {% for a in daftar_aktor %}
+          <option value="{{ a.nama }}"></option>
+          {% endfor %}
+        </datalist>
+        <button type="submit">Cari Aktor</button>
+      </form>
+
+      <div class="stat-row">
+        <div class="stat"><strong>{{ total }}</strong><span>Aktor Terdaftar</span></div>
+        <div class="stat"><strong>2</strong><span>Endpoint API</span></div>
+        <div class="stat"><strong>JSON</strong><span>Format Response</span></div>
+      </div>
+    </section>
+
+    <section id="hasil-pencarian" class="result-panel hidden"></section>
+
+    <section class="grid-section">
+      <div class="grid-header">
+        <h2>Daftar Aktor Tersedia</h2>
+        <p>Klik salah satu kartu untuk melihat detail lengkapnya</p>
+      </div>
+      <div class="actor-grid">
+        {% for a in daftar_aktor %}
+        <button class="actor-card" data-nama="{{ a.nama }}">
+          <div class="avatar">{{ a.nama[0] }}</div>
+          <div class="actor-info">
+            <p class="actor-name">{{ a.nama }}</p>
+            <p class="actor-country">{{ a.negara_asal }}</p>
+          </div>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Dibangun dengan Flask &middot; Studi Kasus 5: API Informasi Aktor
+  </footer>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
